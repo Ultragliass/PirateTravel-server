@@ -1,6 +1,7 @@
 import { sql } from "../sql";
 import { RowDataPacket, ResultSetHeader } from "mysql2";
 import bcrypt from "bcrypt";
+import { UserData } from "../models/userData";
 
 export async function checkIfUserExists(username: string): Promise<boolean> {
   const [result] = await sql.execute<RowDataPacket[]>(
@@ -34,7 +35,7 @@ export async function registerUser(
 export async function loginUser(
   username: string,
   password: string
-): Promise<false | object> {
+): Promise<false | UserData> {
   const [[result]] = await sql.execute<RowDataPacket[]>(
     "SELECT id AS userId, username, password AS hash, name, lastname FROM users WHERE username = ?",
     [username]

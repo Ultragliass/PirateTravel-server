@@ -1,8 +1,8 @@
-import express from "express";
-import jwt from "jsonwebtoken";
 import { loginUser } from "../queries/userQueries";
 import { loginSchema } from "../schemas/login";
 import { JWT_SECRET } from "../secret";
+import express from "express";
+import jwt from "jsonwebtoken";
 
 const router = express.Router();
 
@@ -29,9 +29,19 @@ router.post("/", async (req, res) => {
     return;
   }
 
-  const token = jwt.sign({ ...userDetails }, JWT_SECRET);
+  const tokenData = {
+    userId: userDetails.userId,
+    username: userDetails.username,
+  };
 
-  res.send({ success: true, token });
+  const userData = {
+    name: userDetails.name,
+    lastname: userDetails.lastname,
+  };
+
+  const token = jwt.sign({ ...tokenData }, JWT_SECRET);
+
+  res.send({ success: true, token, userData });
 });
 
 export { router as login };
