@@ -15,13 +15,13 @@ export async function checkIfUserExists(username: string): Promise<boolean> {
   return false;
 }
 
-export async function addUser(
+export async function registerUser(
   username: string,
   password: string,
   name: string,
   lastname: string
 ): Promise<number> {
-    const hashedPassword = await hashPassword(password);
+  const hashedPassword = await hashPassword(password);
 
   const [result] = await sql.execute<ResultSetHeader>(
     "INSERT INTO users (username, password, name, lastname) VALUES (?, ?, ?, ?)",
@@ -31,6 +31,31 @@ export async function addUser(
   return result.insertId;
 }
 
+export async function loginUser(
+  username: string,
+  password: string
+): Promise<false | object> {
+  const [[result]] = await sql.execute<RowDataPacket[]>(
+    "SELECT id AS userId, username, password AS hash, name, lastname FROM users WHERE username = ?",
+    [username]
+  );
+
+  if (!(await checkPassword(password, result.hash))) {
+    return false;
+  }
+
+  return {
+    userId: result.userId,
+    username: result.username,
+    name: result.name,
+    lastname: result.lastname,
+  };
+}
+
 async function hashPassword(password: string): Promise<string> {
   return await bcrypt.hash(password, 10);
+}
+
+async function checkPassword(password: string, hash: string): Promise<boolean> {
+  return bcrypt.compare(password, hash);
 }

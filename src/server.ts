@@ -5,6 +5,7 @@ import socketIo from "socket.io";
 import cors from "cors";
 import expressJwt from "express-jwt";
 import { JWT_SECRET } from "./secret";
+import { login } from "./routers/login";
 
 const PORT: string | number = process.env.PORT || 3001;
 const app = express();
@@ -20,5 +21,7 @@ app.use(
 );
 
 app.use("/register", register);
+
+app.use("/login", login);
 
 server.listen(PORT, () => console.log(`Server is up at ${PORT}`));

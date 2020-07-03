@@ -1,4 +1,4 @@
-import { checkIfUserExists, addUser } from "../queries/userQueries";
+import { checkIfUserExists, registerUser } from "../queries/userQueries";
 import { registerSchema } from "../schemas/register";
 import { JWT_SECRET } from "../secret";
 import express from "express";
@@ -30,7 +30,7 @@ router.post("/", async (req, res) => {
     return;
   }
 
-  const userId = await addUser(username, password, name, lastname);
+  const userId = await registerUser(username, password, name, lastname);
 
   const token = jwt.sign({ username, userId, name, lastname }, JWT_SECRET);
 
