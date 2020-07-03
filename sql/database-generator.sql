@@ -7,7 +7,7 @@ DROP TABLE IF EXISTS users;
 CREATE TABLE users (
 id int NOT NULL AUTO_INCREMENT,
 username varchar(20) NOT NULL,
-password varchar(30) NOT NULL,
+password varchar(60) NOT NULL,
 name varchar(20) NOT NULL,
 lastname varchar(20) NOT NULL,
 userType varchar(5) NOT NULL DEFAULT 'user',
