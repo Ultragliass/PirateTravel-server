@@ -29,17 +29,13 @@ router.post("/", async (req, res) => {
     return;
   }
 
-  const tokenData = {
-    userId: userDetails.userId,
-    username: userDetails.username,
-  };
-
   const userData = {
+    username: userDetails.username,
     name: userDetails.name,
     lastname: userDetails.lastname,
   };
 
-  const token = jwt.sign({ ...tokenData }, JWT_SECRET);
+  const token = jwt.sign({ userId: userDetails.userId }, JWT_SECRET);
 
   res.send({ success: true, token, userData });
 });

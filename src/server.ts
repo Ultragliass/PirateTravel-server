@@ -1,11 +1,11 @@
+import { register } from "./routers/register";
+import { login } from "./routers/login";
+import { JWT_SECRET } from "./secret";
 import express, { Request, Response, NextFunction } from "express";
 import http from "http";
-import { register } from "./routers/register";
 import socketIo from "socket.io";
 import cors from "cors";
 import expressJwt from "express-jwt";
-import { JWT_SECRET } from "./secret";
-import { login } from "./routers/login";
 
 const PORT: string | number = process.env.PORT || 3001;
 const app = express();
