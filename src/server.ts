@@ -1,5 +1,6 @@
 import express from "express";
 import http from "http";
+import { register } from "./routers/register";
 import socketIo from "socket.io";
 import cors from "cors";
 import expressJwt from "express-jwt";
@@ -18,10 +19,6 @@ app.use(
   expressJwt({ secret: JWT_SECRET }).unless({ path: ["/register", "/login"] })
 );
 
-
-
-app.get("/", (req, res) => {
-  res.send("Hi there!");
-});
+app.use("/register", register);
 
 server.listen(PORT, () => console.log(`Server is up at ${PORT}`));
