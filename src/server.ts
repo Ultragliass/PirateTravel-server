@@ -1,4 +1,4 @@
-import express from "express";
+import express, { Request, Response, NextFunction } from "express";
 import http from "http";
 import { register } from "./routers/register";
 import socketIo from "socket.io";
@@ -23,5 +23,9 @@ app.use(
 app.use("/register", register);
 
 app.use("/login", login);
+
+app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+  res.status(500).send("This is most definitely not the path you're looking for.");
+});
 
 server.listen(PORT, () => console.log(`Server is up at ${PORT}`));
