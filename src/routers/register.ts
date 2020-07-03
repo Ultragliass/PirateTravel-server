@@ -32,7 +32,7 @@ router.post("/", async (req, res) => {
 
   const userId = await registerUser(username, password, name, lastname);
 
-  const token = jwt.sign({ userId }, JWT_SECRET);
+  const token = jwt.sign({ userId, userType: "user" }, JWT_SECRET);
 
   res.send({ success: true, token, userData: { username, name, lastname } });
 });

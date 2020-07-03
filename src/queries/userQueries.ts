@@ -37,7 +37,7 @@ export async function loginUser(
   password: string
 ): Promise<false | UserData> {
   const [[result]] = await sql.execute<RowDataPacket[]>(
-    "SELECT id AS userId, username, password AS hash, name, lastname FROM users WHERE username = ?",
+    "SELECT id AS userId, username, password AS hash, name, lastname, userType FROM users WHERE username = ?",
     [username]
   );
 
@@ -50,6 +50,7 @@ export async function loginUser(
     username: result.username,
     name: result.name,
     lastname: result.lastname,
+    userType: result.userType
   };
 }
 

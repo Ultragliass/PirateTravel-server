@@ -6,6 +6,7 @@ import http from "http";
 import socketIo from "socket.io";
 import cors from "cors";
 import expressJwt from "express-jwt";
+import { vacations } from "./routers/vacations";
 
 const PORT: string | number = process.env.PORT || 3001;
 const app = express();
@@ -24,8 +25,12 @@ app.use("/register", register);
 
 app.use("/login", login);
 
+app.use("/vacations", vacations);
+
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
-  res.status(500).send("This is most definitely not the path you're looking for.");
+  res
+    .status(500)
+    .send("This is most definitely not the path you're looking for.");
 });
 
 server.listen(PORT, () => console.log(`Server is up at ${PORT}`));
