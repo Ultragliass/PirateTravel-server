@@ -5,6 +5,7 @@ import {
   isAlreadyFollowing,
   addVacation,
   updateVacation,
+  deleteVacation,
 } from "../queries/vacationQueries";
 import { validateAdmin } from "../middleware/validateAdmin";
 import { validateSchema } from "../middleware/validateSchema";
@@ -70,7 +71,7 @@ router.put(
 );
 
 router.put(
-  "/edit_vacation/:vacationId",
+  "/edit/:vacationId",
   validateAdmin(),
   validateVacationExist(),
   validateSchema(vacationSchema),
@@ -84,6 +85,23 @@ router.put(
     }
 
     res.send({ success: true, msg: "Vacation updated." });
+  }
+);
+
+router.delete(
+  "/delete/:vacationId",
+  validateAdmin(),
+  validateVacationExist(),
+  async (req, res) => {
+    const { vacationId } = req.params;
+
+    const affectedRows = await deleteVacation(vacationId);
+
+    if (!affectedRows) {
+      return res.status(500).send({ success: false, msg: "Unexpected error." });
+    }
+
+    res.send({ success: true, msg: "Vacation deleted." });
   }
 );
 

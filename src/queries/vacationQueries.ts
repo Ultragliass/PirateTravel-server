@@ -74,6 +74,22 @@ export async function updateVacation(
   return result.affectedRows;
 }
 
+export async function deleteVacation(
+  vacationId: string | number
+): Promise<number> {
+  await sql.execute<ResultSetHeader>(
+    "DELETE FROM followers WHERE vacationId = ?",
+    [vacationId]
+  );
+
+  const [result] = await sql.execute<ResultSetHeader>(
+    "DELETE FROM vacations WHERE id = ?",
+    [vacationId]
+  );
+
+  return result.affectedRows;
+}
+
 export async function isAlreadyFollowing(
   userId: number | string,
   vacationId: number | string
