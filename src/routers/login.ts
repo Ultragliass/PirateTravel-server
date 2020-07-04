@@ -9,10 +9,10 @@ const router = express.Router();
 router.post("/", async (req, res) => {
   const { username, password } = req.body;
 
-  const result = loginSchema.validate({ username, password });
+  const resolve = loginSchema.validate({ username, password });
 
-  if (result.error) {
-    const msg = result.error.message;
+  if (resolve.error) {
+    const msg = resolve.error.message;
 
     res.send({ success: false, msg });
 

@@ -5,5 +5,4 @@ export const sql = mysql.createPool({
   user: "root",
   password: "123456",
   database: "vacation",
-  multipleStatements: true,
 });

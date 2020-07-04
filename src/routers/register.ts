@@ -9,15 +9,15 @@ const router = express.Router();
 router.post("/", async (req, res) => {
   const { username, password, name, lastname } = req.body;
 
-  const result = registerSchema.validate({
+  const resolve = registerSchema.validate({
     username,
     password,
     name,
     lastname,
   });
 
-  if (result.error) {
-    const msg: string = result.error.message;
+  if (resolve.error) {
+    const msg: string = resolve.error.message;
 
     res.status(400).send({ success: false, msg });
 

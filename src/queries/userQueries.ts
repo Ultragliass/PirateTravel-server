@@ -3,19 +3,6 @@ import { RowDataPacket, ResultSetHeader } from "mysql2";
 import bcrypt from "bcrypt";
 import { UserData } from "../models/userData";
 
-export async function checkIfUserExists(username: string): Promise<boolean> {
-  const [result] = await sql.execute<RowDataPacket[]>(
-    "SELECT id FROM users WHERE username = ?",
-    [username]
-  );
-
-  if (result.length) {
-    return true;
-  }
-
-  return false;
-}
-
 export async function registerUser(
   username: string,
   password: string,
@@ -50,8 +37,17 @@ export async function loginUser(
     username: result.username,
     name: result.name,
     lastname: result.lastname,
-    userType: result.userType
+    userType: result.userType,
   };
+}
+
+export async function checkIfUserExists(username: string): Promise<boolean> {
+  const [result] = await sql.execute<RowDataPacket[]>(
+    "SELECT id FROM users WHERE username = ?",
+    [username]
+  );
+
+  return result.length > 0;
 }
 
 async function hashPassword(password: string): Promise<string> {
