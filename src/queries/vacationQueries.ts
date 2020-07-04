@@ -36,6 +36,23 @@ export async function toggleVacationFollow(
   }
 }
 
+export async function addVacation(
+  description: string,
+  destination: string,
+  image: string,
+  startDate: Date,
+  endDate: Date,
+  price: number | string
+): Promise<number> {
+  const [result] = await sql.execute<ResultSetHeader>(
+    `INSERT INTO vacations (description, destination, image, startDate, endDate, price)
+     VALUES (?, ?, ?, ?, ?, ?)`,
+    [description, destination, image, startDate, endDate, price]
+  );
+
+  return result.affectedRows;
+}
+
 export async function isAlreadyFollowing(
   userId: number | string,
   vacationId: number | string

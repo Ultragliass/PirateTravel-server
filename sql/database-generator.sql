@@ -24,8 +24,7 @@ destination varchar(30) NOT NULL,
 image varchar(100) NOT NULL,
 startDate datetime NOT NULL,
 endDate datetime NOT NULL,
-price int NOT NULL,
-followers int NOT NULL DEFAULT 0,
+price double NOT NULL,
 PRIMARY KEY(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 

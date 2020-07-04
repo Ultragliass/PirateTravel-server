@@ -29,8 +29,8 @@ app.use("/vacations", vacations);
 
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
   res
-    .status(500)
-    .send("This is most definitely not the path you're looking for.");
+    .status(401)
+    .send("Unauthorized.");
 });
 
 server.listen(PORT, () => console.log(`Server is up at ${PORT}`));
