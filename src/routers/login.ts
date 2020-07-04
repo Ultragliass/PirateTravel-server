@@ -3,21 +3,12 @@ import { loginSchema } from "../schemas/login";
 import { JWT_SECRET } from "../secret";
 import express from "express";
 import jwt from "jsonwebtoken";
+import { validateSchema } from "../middleware/validateSchema";
 
 const router = express.Router();
 
-router.post("/", async (req, res) => {
+router.post("/", validateSchema(loginSchema), async (req, res) => {
   const { username, password } = req.body;
-
-  const resolve = loginSchema.validate({ username, password });
-
-  if (resolve.error) {
-    const msg = resolve.error.message;
-
-    res.send({ success: false, msg });
-
-    return;
-  }
 
   const userDetails = await loginUser(username, password);
 

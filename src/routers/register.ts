@@ -3,26 +3,12 @@ import { registerSchema } from "../schemas/register";
 import { JWT_SECRET } from "../secret";
 import express from "express";
 import jwt from "jsonwebtoken";
+import { validateSchema } from "../middleware/validateSchema";
 
 const router = express.Router();
 
-router.post("/", async (req, res) => {
+router.post("/", validateSchema(registerSchema), async (req, res) => {
   const { username, password, name, lastname } = req.body;
-
-  const resolve = registerSchema.validate({
-    username,
-    password,
-    name,
-    lastname,
-  });
-
-  if (resolve.error) {
-    const msg: string = resolve.error.message;
-
-    res.status(400).send({ success: false, msg });
-
-    return;
-  }
 
   if (await checkIfUserExists(username)) {
     res.status(409).send({ success: false, msg: "User already exists." });

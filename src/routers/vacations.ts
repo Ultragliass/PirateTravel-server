@@ -29,9 +29,12 @@ router.put("/toggle_follow/:vacationId", async (req: JWTRequest, res) => {
   const { userId, userType } = req.user;
 
   if (userType !== "user") {
-    res
-      .status(403)
-      .send({ success: false, msg: "You do not have this privilege." });
+    res.status(403).send({
+      success: false,
+      msg: "You do not have permission to perform this action.",
+    });
+
+    return;
   }
 
   const resolve = followToggleSchema.validate({
@@ -62,6 +65,23 @@ router.put("/toggle_follow/:vacationId", async (req: JWTRequest, res) => {
   const msg = isFollowing ? "Vacation unfollowed." : "Vacation followed";
 
   res.send({ success: true, msg });
+});
+
+router.post("/", (req: JWTRequest, res) => {
+  const { userType } = req.user;
+
+  const {} = req.body;
+
+  if (userType !== "admin") {
+    res.status(403).send({
+      success: false,
+      msg: "You do not have permission to perform this action.",
+    });
+
+    return;
+  }
+
+  
 });
 
 export { router as vacations };
