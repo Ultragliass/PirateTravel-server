@@ -23,21 +23,6 @@ router.get("/", async (req: JWTRequest, res) => {
   res.send(vacations);
 });
 
-router.post(
-  "/",
-  validateAdmin(),
-  validateSchema(vacationSchema),
-  async (req: JWTRequest, res) => {
-    const affectedRows = await addVacation(req.body);
-
-    if (!affectedRows) {
-      return res.status(500).send({ success: false, msg: "Unexpected error." });
-    }
-
-    res.send({ success: true, msg: "Vacation added." });
-  }
-);
-
 router.put(
   "/toggle_follow/:vacationId",
   validateVacationExist(),
@@ -67,6 +52,21 @@ router.put(
     const msg = isFollowing ? "Vacation unfollowed." : "Vacation followed.";
 
     res.send({ success: true, msg });
+  }
+);
+
+router.post(
+  "/",
+  validateAdmin(),
+  validateSchema(vacationSchema),
+  async (req: JWTRequest, res) => {
+    const affectedRows = await addVacation(req.body);
+
+    if (!affectedRows) {
+      return res.status(500).send({ success: false, msg: "Unexpected error." });
+    }
+
+    res.send({ success: true, msg: "Vacation added." });
   }
 );
 

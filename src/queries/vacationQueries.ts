@@ -1,13 +1,13 @@
 import { sql } from "../sql";
-import { RowDataPacket, ResultSetHeader } from "mysql2";
 import { IVacation } from "../models/vacation";
+import { RowDataPacket, ResultSetHeader } from "mysql2";
 
 export async function getVacations(
   userId: number | string
 ): Promise<RowDataPacket[]> {
   const [result] = await sql.execute<RowDataPacket[]>(
     `SELECT description, destination, image, startDate, endDate, price, 
-    IF (followers.userId > 0, true, false) AS isFollowing 
+    IF (userId = ?, true, false) AS isFollowing 
     FROM vacations LEFT JOIN followers ON vacations.id = followers.vacationId`,
     [userId]
   );

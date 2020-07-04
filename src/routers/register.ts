@@ -1,9 +1,9 @@
 import { checkIfUserExists, registerUser } from "../queries/userQueries";
 import { registerSchema } from "../schemas/register";
 import { JWT_SECRET } from "../secret";
+import { validateSchema } from "../middleware/validateSchema";
 import express from "express";
 import jwt from "jsonwebtoken";
-import { validateSchema } from "../middleware/validateSchema";
 
 const router = express.Router();
 

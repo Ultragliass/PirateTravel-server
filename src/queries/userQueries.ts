@@ -1,7 +1,7 @@
+import { UserData } from "../models/userData";
 import { sql } from "../sql";
 import { RowDataPacket, ResultSetHeader } from "mysql2";
 import bcrypt from "bcrypt";
-import { UserData } from "../models/userData";
 
 export async function registerUser(
   username: string,
