@@ -26,7 +26,13 @@ router.get("/", async (req: JWTRequest, res) => {
 
 router.put("/toggle_follow/:vacationId", async (req: JWTRequest, res) => {
   const { vacationId } = req.params;
-  const { userId } = req.user;
+  const { userId, userType } = req.user;
+
+  if (userType !== "user") {
+    res
+      .status(403)
+      .send({ success: false, msg: "You do not have this privilege." });
+  }
 
   const resolve = followToggleSchema.validate({
     vacationId,
