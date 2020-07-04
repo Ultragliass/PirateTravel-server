@@ -15,6 +15,14 @@ PRIMARY KEY(id),
 INDEX username(username)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+INSERT INTO users (username, password, name, lastname, userType) VALUES (
+"Admin",
+"$10$VP61I/KkwNUvqSeDmjeC/ui5DJTTckQNcTnvy6EQrM0rduoowgNAm",
+"Israel",
+"Israeli",
+"admin"
+);
+
 DROP TABLE IF EXISTS vacations;
 
 CREATE TABLE vacations (

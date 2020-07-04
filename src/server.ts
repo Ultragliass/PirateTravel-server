@@ -28,9 +28,7 @@ app.use("/login", login);
 app.use("/vacations", vacations);
 
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
-  res
-    .status(401)
-    .send("Unauthorized.");
+  res.status(401).send("Unauthorized.");
 });
 
 server.listen(PORT, () => console.log(`Server is up at ${PORT}`));

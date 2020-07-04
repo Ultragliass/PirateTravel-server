@@ -1,12 +1,17 @@
-# 
+# Vacoronation - server
 
-A Minimal Express Typescript boilerplate
-
-Use this template repository to create a new Node project with Express and Typescript installed
+This will be the server side for the Vacoronation project.
 
 ## Instructions
 
-- Type `npm i`
-- Type `npm start`
-- Open your browser and go to http://localhost:4000
-- WIN!
+- Run script in `sql` folder in your MySql workbench.
+- Run `npm i`.
+- Alter `sql.ts` with your database details.
+- Set `JWT_SECRET=<secret>`.
+- Set `PORT=<port>`.
+- Run `npm start`.
+
+## Admin login info
+
+- Username: `Admin`.
+- Password: `123456Ad`.

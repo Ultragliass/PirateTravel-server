@@ -11,9 +11,9 @@ router.post("/", validateSchema(registerSchema), async (req, res) => {
   const { username, password, name, lastname } = req.body;
 
   if (await checkIfUserExists(username)) {
-    res.status(409).send({ success: false, msg: "User already exists." });
-
-    return;
+    return res
+      .status(409)
+      .send({ success: false, msg: "User already exists." });
   }
 
   const userId = await registerUser(username, password, name, lastname);

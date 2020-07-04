@@ -13,11 +13,9 @@ router.post("/", validateSchema(loginSchema), async (req, res) => {
   const userDetails = await loginUser(username, password);
 
   if (!userDetails) {
-    res
+    return res
       .status(401)
       .send({ success: false, msg: "Username and password don't match" });
-
-    return;
   }
 
   const tokenData = {

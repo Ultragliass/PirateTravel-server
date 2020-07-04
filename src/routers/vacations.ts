@@ -26,18 +26,16 @@ router.put("/toggle_follow/:vacationId", async (req: JWTRequest, res) => {
   const { userId, userType } = req.user;
 
   if (userType !== "user") {
-    res.status(403).send({
+    return res.status(403).send({
       success: false,
       msg: "You do not have permission to perform this action.",
     });
-
-    return;
   }
 
   if (!Number.isInteger(Number(vacationId))) {
     return res
       .status(400)
-      .send({ success: false, msg: "The id must be an integer." });
+      .send({ success: false, msg: "Parameter must be an integer." });
   }
 
   const isExist = await isVacationExist(vacationId);
@@ -57,9 +55,7 @@ router.put("/toggle_follow/:vacationId", async (req: JWTRequest, res) => {
   );
 
   if (!affectedRows) {
-    res.status(500).send({ success: false, msg: "Unexpected error." });
-
-    return;
+    return res.status(500).send({ success: false, msg: "Unexpected error." });
   }
 
   const msg = isFollowing ? "Vacation unfollowed." : "Vacation followed.";
