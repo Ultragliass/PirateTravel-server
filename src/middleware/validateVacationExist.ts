@@ -3,7 +3,7 @@ import { JWTRequest } from "../models/jwtRequest";
 import { isVacationExist } from "../queries/vacationQueries";
 
 export const validateVacationExist = () => {
-  return function (req: JWTRequest, res: Response, next: NextFunction) {
+  return async function (req: JWTRequest, res: Response, next: NextFunction) {
     const { vacationId } = req.params;
 
     if (!Number.isInteger(Number(vacationId))) {
@@ -12,7 +12,7 @@ export const validateVacationExist = () => {
         .send({ success: false, msg: "Parameter must be an integer." });
     }
 
-    const isExist = isVacationExist(vacationId);
+    const isExist = await isVacationExist(vacationId);
 
     if (!isExist) {
       return res

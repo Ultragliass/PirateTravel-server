@@ -3,14 +3,14 @@ import {
   getVacations,
   toggleVacationFollow,
   isAlreadyFollowing,
-  isVacationExist,
   addVacation,
+  updateVacation,
 } from "../queries/vacationQueries";
-import express from "express";
 import { validateAdmin } from "../middleware/validateAdmin";
 import { validateSchema } from "../middleware/validateSchema";
 import { vacationSchema } from "../schemas/vacation";
 import { validateVacationExist } from "../middleware/validateVacationExist";
+import express from "express";
 
 const router = express.Router();
 
@@ -21,6 +21,21 @@ router.get("/", async (req: JWTRequest, res) => {
 
   res.send(vacations);
 });
+
+router.post(
+  "/",
+  validateAdmin(),
+  validateSchema(vacationSchema),
+  async (req: JWTRequest, res) => {
+    const affectedRows = await addVacation(req.body);
+
+    if (!affectedRows) {
+      return res.status(500).send({ success: false, msg: "Unexpected error." });
+    }
+
+    res.send({ success: true, msg: "Vacation added." });
+  }
+);
 
 router.put(
   "/toggle_follow/:vacationId",
@@ -62,45 +77,13 @@ router.put(
   async (req: JWTRequest, res) => {
     const { vacationId } = req.params;
 
-    const {
-      description,
-      destination,
-      image,
-      startDate,
-      endDate,
-      price,
-    } = req.body;
-  }
-);
-
-router.post(
-  "/",
-  validateAdmin(),
-  validateSchema(vacationSchema),
-  async (req: JWTRequest, res) => {
-    const {
-      description,
-      destination,
-      image,
-      startDate,
-      endDate,
-      price,
-    } = req.body;
-
-    const affectedRows = await addVacation(
-      description,
-      destination,
-      image,
-      startDate,
-      endDate,
-      price
-    );
+    const affectedRows = await updateVacation(req.body, vacationId);
 
     if (!affectedRows) {
       return res.status(500).send({ success: false, msg: "Unexpected error." });
     }
 
-    res.send({ success: true, msg: "Vacation added." });
+    res.send({ success: true, msg: "Vacation updated." });
   }
 );
 

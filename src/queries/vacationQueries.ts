@@ -1,5 +1,6 @@
 import { sql } from "../sql";
 import { RowDataPacket, ResultSetHeader } from "mysql2";
+import { IVacation } from "../models/vacation";
 
 export async function getVacations(
   userId: number | string
@@ -36,18 +37,38 @@ export async function toggleVacationFollow(
   }
 }
 
-export async function addVacation(
-  description: string,
-  destination: string,
-  image: string,
-  startDate: Date,
-  endDate: Date,
-  price: number | string
-): Promise<number> {
+export async function addVacation(body: IVacation): Promise<number> {
   const [result] = await sql.execute<ResultSetHeader>(
     `INSERT INTO vacations (description, destination, image, startDate, endDate, price)
      VALUES (?, ?, ?, ?, ?, ?)`,
-    [description, destination, image, startDate, endDate, price]
+    [
+      body.description,
+      body.destination,
+      body.image,
+      body.startDate,
+      body.endDate,
+      body.price,
+    ]
+  );
+
+  return result.affectedRows;
+}
+
+export async function updateVacation(
+  body: IVacation,
+  vacationId: number | string
+): Promise<number> {
+  const [result] = await sql.execute<ResultSetHeader>(
+    `UPDATE vacations SET description = ?, destination = ?, image = ?, startDate = ?, endDate = ?, price = ? WHERE id = ?`,
+    [
+      body.description,
+      body.destination,
+      body.image,
+      body.startDate,
+      body.endDate,
+      body.price,
+      vacationId,
+    ]
   );
 
   return result.affectedRows;
