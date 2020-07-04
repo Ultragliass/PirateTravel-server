@@ -17,7 +17,7 @@ INDEX username(username)
 
 INSERT INTO users (username, password, name, lastname, userType) VALUES (
 "Admin",
-"$10$VP61I/KkwNUvqSeDmjeC/ui5DJTTckQNcTnvy6EQrM0rduoowgNAm",
+"$2b$10$zO19YZJLWE4Yqi.Hr7U8eui5CYWe4hbqgXJV07sOoCJAaGzr4zGQK",
 "Israel",
 "Israeli",
 "admin"

@@ -28,6 +28,10 @@ export async function loginUser(
     [username]
   );
 
+  if (!result) {
+    return false;
+  }
+
   if (!(await checkPassword(password, result.hash))) {
     return false;
   }
