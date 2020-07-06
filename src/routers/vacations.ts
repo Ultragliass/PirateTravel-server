@@ -23,8 +23,23 @@ router.get("/", async (req: JWTRequest, res) => {
   res.send(vacations);
 });
 
+router.post(
+  "/",
+  validateAdmin(),
+  validateSchema(vacationSchema),
+  async (req: JWTRequest, res) => {
+    const insertedId = await addVacation(req.body);
+
+    if (!insertedId) {
+      return res.status(500).send({ success: false, msg: "Unexpected error." });
+    }
+
+    res.send({ success: true, msg: "Vacation added.", insertedId });
+  }
+);
+
 router.put(
-  "/toggle_follow/:vacationId",
+  "/:vacationId/toggle_follow",
   validateVacationExist(),
   async (req: JWTRequest, res) => {
     const { vacationId } = req.params;
@@ -55,23 +70,8 @@ router.put(
   }
 );
 
-router.post(
-  "/",
-  validateAdmin(),
-  validateSchema(vacationSchema),
-  async (req: JWTRequest, res) => {
-    const insertedId = await addVacation(req.body);
-
-    if (!insertedId) {
-      return res.status(500).send({ success: false, msg: "Unexpected error." });
-    }
-
-    res.send({ success: true, msg: "Vacation added.", insertedId });
-  }
-);
-
 router.put(
-  "/edit/:vacationId",
+  "/:vacationId/edit",
   validateAdmin(),
   validateVacationExist(),
   validateSchema(vacationSchema),
@@ -89,7 +89,7 @@ router.put(
 );
 
 router.delete(
-  "/delete/:vacationId",
+  "/:vacationId",
   validateAdmin(),
   validateVacationExist(),
   async (req, res) => {
