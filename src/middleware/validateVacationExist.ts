@@ -1,6 +1,7 @@
-import { Response, NextFunction } from "express";
 import { JWTRequest } from "../models/jwtRequest";
 import { isVacationExist } from "../queries/vacationQueries";
+import { Response, NextFunction } from "express";
+import { Packet } from "socket.io";
 
 export const validateVacationExist = () => {
   return async function (req: JWTRequest, res: Response, next: NextFunction) {
@@ -21,5 +22,21 @@ export const validateVacationExist = () => {
     }
 
     next();
+  };
+};
+
+export const validateVacationExistSocket = () => {
+  return async function ([_, { vacationId }]: Packet, next: NextFunction) {
+    if (!Number.isInteger(Number(vacationId))) {
+      return next(new Error("vacationId must be a number."));
+    }
+
+    const isExist = await isVacationExist(vacationId);
+
+    if (!isExist) {
+      return next(new Error("Vacation does not exist."));
+    }
+
+    return next();
   };
 };

@@ -2,14 +2,17 @@ import { register } from "./routers/register";
 import { login } from "./routers/login";
 import { JWT_SECRET } from "./secret";
 import { vacations } from "./routers/vacations";
-import { IVacation } from "./models/vacation";
+import { JwtSocket } from "./models/jwtSocket";
+import { validateVacationExistSocket } from "./middleware/validateVacationExist";
+import { validateAdminSocket } from "./middleware/validateAdmin";
+import { validateSchemaSocket } from "./middleware/validateSchema";
+import { vacationSchema } from "./schemas/vacation";
 import express, { Request, Response, NextFunction } from "express";
 import http from "http";
-import socketIo, { Socket } from "socket.io";
+import socketIo from "socket.io";
 import cors from "cors";
 import expressJwt from "express-jwt";
 import socketioJwt from "socketio-jwt";
-import { JwtSocket } from "./models/jwtSocket";
 
 const PORT: string | number = process.env.PORT || 3001;
 const app = express();
@@ -44,15 +47,12 @@ io.sockets
   .on("authenticated", (socket: JwtSocket) => {
     const { userType } = socket.decoded_token;
 
-    socket.on("update_vacation", (data: any) => {
-      if (userType !== "admin") {
-        return socket.emit(
-          "unauthorized",
-          "You do not have permission to perform this action."
-        );
-      }
+    socket.use(validateAdminSocket(userType));
+    socket.use(validateVacationExistSocket());
+    socket.use(validateSchemaSocket(vacationSchema));
 
-      socket.broadcast.emit("update_vacation", data);
+    socket.on("update_vacation", (vacationData) => {
+      socket.broadcast.emit("update_vacation", vacationData);
     });
   });
 
