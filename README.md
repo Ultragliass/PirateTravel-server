@@ -6,9 +6,9 @@ This will be the server side for the Vacoronation project.
 
 - Run script in `sql` folder in your MySql workbench.
 - Run `npm i`.
-- Alter `sql.ts` with your database details.
-- Set `JWT_SECRET=<secret>`.
-- Set `PORT=<port>`.
+- Alter `sql.ts` with your host, user, and password.
+- Set `JWT_SECRET=<secret>`. (`test` by default)
+- Set `PORT=<port>`. (`3001` by default)
 - Run `npm start`.
 
 ## Admin login info

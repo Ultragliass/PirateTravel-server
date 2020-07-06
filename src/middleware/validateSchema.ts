@@ -1,11 +1,10 @@
 import joi from "@hapi/joi";
 import { Request, Response, NextFunction } from "express";
-import Joi from "@hapi/joi";
 import { Packet } from "socket.io";
 
 export const validateSchema = (schema: joi.Schema) => {
   return function (req: Request, res: Response, next: NextFunction) {
-    const result = schema.validate({...req.body});
+    const result = schema.validate({ ...req.body });
 
     if (result.error) {
       const msg = result.error.message;
@@ -17,9 +16,9 @@ export const validateSchema = (schema: joi.Schema) => {
   };
 };
 
-export const validateSchemaSocket = (schema: Joi.Schema) => {
+export const validateSchemaSocket = (schema: joi.Schema) => {
   return function ([_, { vacation }]: Packet, next: NextFunction) {
-    const result = schema.validate({...vacation});
+    const result = schema.validate({ ...vacation });
 
     if (result.error) {
       const msg = result.error.message;
