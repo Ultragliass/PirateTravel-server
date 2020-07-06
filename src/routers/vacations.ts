@@ -51,7 +51,7 @@ router.put(
 
     const msg = isFollowing ? "Vacation unfollowed." : "Vacation followed.";
 
-    res.send({ success: true, msg });
+    res.send({ success: true, msg, vacationId });
   }
 );
 
@@ -60,13 +60,13 @@ router.post(
   validateAdmin(),
   validateSchema(vacationSchema),
   async (req: JWTRequest, res) => {
-    const affectedRows = await addVacation(req.body);
+    const insertedId = await addVacation(req.body);
 
-    if (!affectedRows) {
+    if (!insertedId) {
       return res.status(500).send({ success: false, msg: "Unexpected error." });
     }
 
-    res.send({ success: true, msg: "Vacation added." });
+    res.send({ success: true, msg: "Vacation added.", insertedId });
   }
 );
 
@@ -84,7 +84,7 @@ router.put(
       return res.status(500).send({ success: false, msg: "Unexpected error." });
     }
 
-    res.send({ success: true, msg: "Vacation updated." });
+    res.send({ success: true, msg: "Vacation updated.", vacationId });
   }
 );
 
@@ -101,7 +101,7 @@ router.delete(
       return res.status(500).send({ success: false, msg: "Unexpected error." });
     }
 
-    res.send({ success: true, msg: "Vacation deleted." });
+    res.send({ success: true, msg: "Vacation deleted.", vacationId });
   }
 );
 

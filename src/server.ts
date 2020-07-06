@@ -9,6 +9,7 @@ import socketIo, { Socket } from "socket.io";
 import cors from "cors";
 import expressJwt from "express-jwt";
 import socketioJwt from "socketio-jwt";
+import { JwtSocket } from "./models/jwtSocket";
 
 const PORT: string | number = process.env.PORT || 3001;
 const app = express();
@@ -40,19 +41,18 @@ io.sockets
       secret: JWT_SECRET,
     })
   )
-  .on("authenticated", (socket: any) => {
+  .on("authenticated", (socket: JwtSocket) => {
     const { userType } = socket.decoded_token;
-    console.log(`${userType} connected.`);
 
-    socket.on("UPDATE_VACATION", () => {
+    socket.on("update_vacation", (data: any) => {
       if (userType !== "admin") {
         return socket.emit(
-          "UNAUTHORIZED",
+          "unauthorized",
           "You do not have permission to perform this action."
         );
       }
 
-      socket.broadcast.emit("UPDATE_VACATIONS", "Vacation updated.");
+      socket.broadcast.emit("update_vacation", data);
     });
   });
 

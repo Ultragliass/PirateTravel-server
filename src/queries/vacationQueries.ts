@@ -51,7 +51,7 @@ export async function addVacation(body: IVacation): Promise<number> {
     ]
   );
 
-  return result.affectedRows;
+  return result.insertId;
 }
 
 export async function updateVacation(
