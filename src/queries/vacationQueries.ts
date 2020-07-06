@@ -22,7 +22,7 @@ export async function toggleVacationFollow(
 ): Promise<number> {
   if (isFollowing) {
     await sql.execute<ResultSetHeader>(
-      "UPDATE vacations SET followers = followers - 1 WHERE vacationId = ?",
+      "UPDATE vacations SET followers = followers - 1 WHERE id = ?",
       [vacationId]
     );
 
@@ -34,7 +34,7 @@ export async function toggleVacationFollow(
     return result.affectedRows;
   } else {
     await sql.execute<ResultSetHeader>(
-      "UPDATE vacations SET followers = followers + 1 WHERE vacationId = ?",
+      "UPDATE vacations SET followers = followers + 1 WHERE id = ?",
       [vacationId]
     );
 
