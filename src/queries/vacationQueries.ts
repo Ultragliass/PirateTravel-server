@@ -21,6 +21,11 @@ export async function toggleVacationFollow(
   isFollowing: boolean
 ): Promise<number> {
   if (isFollowing) {
+    await sql.execute<ResultSetHeader>(
+      "UPDATE vacations SET followers = followers - 1 WHERE vacationId = ?",
+      [vacationId]
+    );
+
     const [result] = await sql.execute<ResultSetHeader>(
       "DELETE FROM followers WHERE userId = ? AND vacationId = ?",
       [userId, vacationId]
@@ -28,6 +33,11 @@ export async function toggleVacationFollow(
 
     return result.affectedRows;
   } else {
+    await sql.execute<ResultSetHeader>(
+      "UPDATE vacations SET followers = followers + 1 WHERE vacationId = ?",
+      [vacationId]
+    );
+
     const [result] = await sql.execute<ResultSetHeader>(
       "INSERT INTO followers (userId, vacationId) VALUES (?, ?)",
       [userId, vacationId]

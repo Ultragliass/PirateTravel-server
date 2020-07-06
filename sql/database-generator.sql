@@ -33,6 +33,7 @@ image varchar(100) NOT NULL,
 startDate datetime NOT NULL,
 endDate datetime NOT NULL,
 price double NOT NULL,
+followers int NOT NULL DEFAULT 0,
 PRIMARY KEY(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
