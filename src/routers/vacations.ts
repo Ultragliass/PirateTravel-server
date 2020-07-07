@@ -11,14 +11,15 @@ import { validateAdmin } from "../middleware/validateAdmin";
 import { validateSchema } from "../middleware/validateSchema";
 import { vacationSchema } from "../schemas/vacation";
 import { validateVacationExist } from "../middleware/validateVacationExist";
+import { io } from "../wss/websocketserver";
 import express from "express";
 
 const router = express.Router();
 
 router.get("/", async (req: JWTRequest, res) => {
-  const { userId } = req.user;
+  const { userId, userType } = req.user;
 
-  const vacations = await getVacations(userId);
+  const vacations = await getVacations(userId, userType);
 
   res.send(vacations);
 });
@@ -34,7 +35,11 @@ router.post(
       return res.status(500).send({ success: false, msg: "Unexpected error." });
     }
 
-    res.send({ success: true, msg: "Vacation added.", insertedId });
+    res.send({ success: true, msg: "Vacation added.", id: insertedId });
+
+    const vacation = { ...req.body, id: insertedId };
+
+    io().in("users").emit("add_vacation", vacation);
   }
 );
 
@@ -66,7 +71,9 @@ router.put(
 
     const msg = isFollowing ? "Vacation unfollowed." : "Vacation followed.";
 
-    res.send({ success: true, msg, vacationId });
+    res.send({ success: true, msg, id: vacationId });
+
+    io().in("admins").emit("toggle_follow", { id: vacationId, isFollowing });
   }
 );
 
@@ -84,7 +91,11 @@ router.put(
       return res.status(500).send({ success: false, msg: "Unexpected error." });
     }
 
-    res.send({ success: true, msg: "Vacation updated.", vacationId });
+    res.send({ success: true, msg: "Vacation updated.", id: vacationId });
+
+    const vacation = { ...req.body, id: vacationId };
+
+    io().in("users").emit("update_vacation", vacation);
   }
 );
 
@@ -102,6 +113,8 @@ router.delete(
     }
 
     res.send({ success: true, msg: "Vacation deleted.", vacationId });
+
+    io().in("users").emit("delete_vacation", { id: vacationId });
   }
 );
 

@@ -3,13 +3,9 @@ import { login } from "./routers/login";
 import { JWT_SECRET } from "./secret";
 import { vacations } from "./routers/vacations";
 import { JwtSocket } from "./models/jwtSocket";
-import { validateVacationExistSocket } from "./middleware/validateVacationExist";
-import { validateAdminSocket } from "./middleware/validateAdmin";
-import { validateSchemaSocket } from "./middleware/validateSchema";
-import { vacationSchema } from "./schemas/vacation";
 import express, { Request, Response, NextFunction } from "express";
+import { initialize, io } from "./wss/websocketserver";
 import http from "http";
-import socketIo from "socket.io";
 import cors from "cors";
 import expressJwt from "express-jwt";
 import socketioJwt from "socketio-jwt";
@@ -17,7 +13,7 @@ import socketioJwt from "socketio-jwt";
 const PORT: string | number = process.env.PORT || 3001;
 const app = express();
 const server = http.createServer(app);
-const io = socketIo(server);
+initialize(server);
 
 app.use(express.json());
 
@@ -37,8 +33,8 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
   res.status(401).send("Unauthorized.");
 });
 
-io.sockets
-  .on(
+io()
+  .sockets.on(
     "connection",
     socketioJwt.authorize({
       secret: JWT_SECRET,
@@ -47,13 +43,11 @@ io.sockets
   .on("authenticated", (socket: JwtSocket) => {
     const { userType } = socket.decoded_token;
 
-    socket.use(validateAdminSocket(userType));
-    socket.use(validateVacationExistSocket());
-    socket.use(validateSchemaSocket(vacationSchema));
-
-    socket.on("update_vacation", (vacationData) => {
-      socket.broadcast.emit("update_vacation", vacationData);
-    });
+    if (userType === "admin") {
+      socket.join("admins");
+    } else {
+      socket.join("users");
+    }
   });
 
 server.listen(PORT, () => console.log(`Server is up at ${PORT}`));

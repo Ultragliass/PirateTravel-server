@@ -15,17 +15,3 @@ export const validateSchema = (schema: joi.Schema) => {
     next();
   };
 };
-
-export const validateSchemaSocket = (schema: joi.Schema) => {
-  return function ([_, { vacation }]: Packet, next: NextFunction) {
-    const result = schema.validate({ ...vacation });
-
-    if (result.error) {
-      const msg = result.error.message;
-
-      return next(new Error(msg));
-    }
-
-    next();
-  };
-};
