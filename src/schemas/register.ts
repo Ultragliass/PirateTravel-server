@@ -10,11 +10,11 @@ export const registerSchema = joi.object({
 
   name: joi
     .string()
-    .pattern(/^[A-Za-z]{2,20}$/)
+    .pattern(/^[A-Za-z]{1,20}$/)
     .required(),
 
   lastname: joi
     .string()
-    .pattern(/^[A-Za-z]{2,20}$/)
+    .pattern(/^[A-Za-z]{1,20}$/)
     .required(),
 });
