@@ -4,7 +4,7 @@ import { Response, NextFunction } from "express";
 import { Packet } from "socket.io";
 
 export const validateVacationExist = () => {
-  return async function (req: JWTRequest, res: Response, next: NextFunction) {
+  return async (req: JWTRequest, res: Response, next: NextFunction) => {
     const { vacationId } = req.params;
 
     if (!Number.isInteger(Number(vacationId))) {

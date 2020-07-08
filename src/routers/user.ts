@@ -57,7 +57,7 @@ router.post("/login", validateSchema(loginSchema), async (req, res) => {
   res.send({ success: true, token, userData });
 });
 
-router.post("/authenticate", async (req: JWTRequest, res) => {
+router.get("/authenticate", async (req: JWTRequest, res) => {
   const { userId } = req.user;
 
   const userData = await authenticateUser(userId);
