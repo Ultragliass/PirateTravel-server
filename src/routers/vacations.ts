@@ -71,7 +71,7 @@ router.put(
 
     const msg = isFollowing ? "Vacation unfollowed." : "Vacation followed.";
 
-    res.send({ success: true, msg, id: vacationId });
+    res.send({ success: true, msg });
 
     io().in("admins").emit("toggle_follow", { id: vacationId, isFollowing });
   }
