@@ -18,9 +18,7 @@ router.post("/register", validateSchema(registerSchema), async (req, res) => {
   const { username, password, name, lastname } = req.body;
 
   if (await checkIfUserExists(username)) {
-    return res
-      .status(409)
-      .send({ success: false, msg: "User already exists." });
+    return res.status(409).send({ success: false, msg: "User already exists" });
   }
 
   const userId = await registerUser(username, password, name, lastname);
@@ -54,19 +52,19 @@ router.post("/login", validateSchema(loginSchema), async (req, res) => {
 
   const token = jwt.sign({ ...tokenData }, JWT_SECRET);
 
-  res.send({ success: true, token, userData });
+  res.send({ success: true, token, userData, userType: userDetails.userType });
 });
 
 router.get("/authenticate", async (req: JWTRequest, res) => {
   const { userId } = req.user;
 
-  const userData = await authenticateUser(userId);
+  const {userType, userData} = await authenticateUser(userId);
 
   if (!userData) {
-    return res.status(500).send({ success: false, msg: "Unexpected error." });
+    return res.status(500).send({ success: false, msg: "Unexpected error" });
   }
 
-  res.send({ success: true, userData });
+  res.send({ success: true, userData, userType });
 });
 
 export { router as users };

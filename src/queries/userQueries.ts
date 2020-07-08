@@ -47,14 +47,17 @@ export async function loginUser(
 
 export async function authenticateUser(userId: string | number): Promise<any> {
   const [[result]] = await sql.execute<RowDataPacket[]>(
-    "SELECT username, name, lastname FROM users WHERE id = ?",
+    "SELECT username, name, lastname, userType FROM users WHERE id = ?",
     [userId]
   );
 
   return {
-    username: result.username,
-    name: result.name,
-    lastname: result.lastname,
+    userType: result.userType,
+    userData: {
+      username: result.username,
+      name: result.name,
+      lastname: result.lastname,
+    },
   };
 }
 
