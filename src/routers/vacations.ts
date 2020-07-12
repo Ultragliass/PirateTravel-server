@@ -11,8 +11,9 @@ import { validateAdmin } from "../middleware/validateAdmin";
 import { validateSchema } from "../middleware/validateSchema";
 import { vacationSchema } from "../schemas/vacation";
 import { validateVacationExist } from "../middleware/validateVacationExist";
-import { io } from "../wss/websocketserver";
+
 import express from "express";
+import { io } from "../wss/websocketserver";
 
 const router = express.Router();
 
