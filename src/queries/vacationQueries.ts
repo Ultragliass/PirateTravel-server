@@ -3,21 +3,12 @@ import { IVacation } from "../models/vacation";
 import { RowDataPacket, ResultSetHeader } from "mysql2";
 
 export async function getVacations(
-  userId: number | string,
-  userType: string
+  userId: number | string
 ): Promise<RowDataPacket[]> {
-  if (userType === "admin") {
-    const [result] = await sql.execute<RowDataPacket[]>(
-      "SELECT * FROM vacations"
-    );
-
-    return result;
-  }
-
   const [result] = await sql.execute<RowDataPacket[]>(
-    `SELECT vacations.id, description, destination, image, startDate, endDate, price, 
-    IF (userId = ?, true, false) AS isFollowing 
-    FROM vacations LEFT JOIN followers ON vacations.id = followers.vacationId`,
+    `SELECT vacations.id, description, destination, image, startDate, endDate,
+     price, followers, IF (userId = ?, true, false) AS isFollowing 
+     FROM vacations LEFT JOIN followers ON vacations.id = followers.vacationId`,
     [userId]
   );
 

@@ -11,17 +11,15 @@ import { validateAdmin } from "../middleware/validateAdmin";
 import { validateSchema } from "../middleware/validateSchema";
 import { vacationSchema } from "../schemas/vacation";
 import { validateVacationExist } from "../middleware/validateVacationExist";
-
-import express, { response } from "express";
+import express from "express";
 import { io } from "../wss/websocketserver";
-import { date } from "@hapi/joi";
 
 const router = express.Router();
 
 router.get("/", async (req: JWTRequest, res) => {
-  const { userId, userType } = req.user;
+  const { userId } = req.user;
 
-  const vacations = await getVacations(userId, userType);
+  const vacations = await getVacations(userId);
 
   res.send(vacations);
 });
