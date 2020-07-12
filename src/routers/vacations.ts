@@ -12,8 +12,9 @@ import { validateSchema } from "../middleware/validateSchema";
 import { vacationSchema } from "../schemas/vacation";
 import { validateVacationExist } from "../middleware/validateVacationExist";
 
-import express from "express";
+import express, { response } from "express";
 import { io } from "../wss/websocketserver";
+import { date } from "@hapi/joi";
 
 const router = express.Router();
 
@@ -31,6 +32,22 @@ router.post(
   validateSchema(vacationSchema),
   async (req: JWTRequest, res) => {
     const insertedId = await addVacation(req.body);
+
+    const { startDate, endDate } = req.body;
+
+    if (startDate < new Date() || endDate < new Date()) {
+      return res.status(401).send({
+        success: false,
+        msg: "Dates cannot be earlier than the current date.",
+      });
+    }
+
+    if (startDate >= endDate) {
+      return res.status(401).send({
+        success: false,
+        msg: "Starting date must be earlier than end date.",
+      });
+    }
 
     if (!insertedId) {
       return res.status(500).send({ success: false, msg: "Unexpected error" });
