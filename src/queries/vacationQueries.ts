@@ -74,8 +74,8 @@ export async function updateVacation(
       body.description,
       body.destination,
       body.image,
-      body.startDate,
-      body.endDate,
+      new Date(body.startDate),
+      new Date(body.endDate),
       body.price,
       vacationId,
     ]

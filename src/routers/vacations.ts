@@ -96,7 +96,7 @@ router.put(
 
     res.send({ success: true, msg: "Vacation updated." });
 
-    const vacation = { ...req.body, id: vacationId };
+    const vacation = { ...req.body, id: Number(vacationId) };
 
     io().in("users").emit("update_vacation", { vacation });
   }
