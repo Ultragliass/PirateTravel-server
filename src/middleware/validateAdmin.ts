@@ -1,6 +1,5 @@
 import { JWTRequest } from "../models/jwtRequest";
 import { Response, NextFunction } from "express";
-import { Packet } from "socket.io";
 
 export const validateAdmin = () => {
   return (req: JWTRequest, res: Response, next: NextFunction) => {

@@ -58,7 +58,7 @@ router.post("/login", validateSchema(loginSchema), async (req, res) => {
 router.get("/authenticate", async (req: JWTRequest, res) => {
   const { userId } = req.user;
 
-  const {userType, userData} = await authenticateUser(userId);
+  const { userType, userData } = await authenticateUser(userId);
 
   if (!userData) {
     return res.status(500).send({ success: false, msg: "Unexpected error" });

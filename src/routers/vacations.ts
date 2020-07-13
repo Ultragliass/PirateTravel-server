@@ -9,8 +9,9 @@ import {
 } from "../queries/vacationQueries";
 import { validateAdmin } from "../middleware/validateAdmin";
 import { validateSchema } from "../middleware/validateSchema";
-import { vacationSchema } from "../schemas/vacation";
 import { validateVacationExist } from "../middleware/validateVacationExist";
+import { validateDates } from "../middleware/validateDates";
+import { vacationSchema } from "../schemas/vacation";
 import express from "express";
 import { io } from "../wss/websocketserver";
 
@@ -28,24 +29,9 @@ router.post(
   "/",
   validateAdmin(),
   validateSchema(vacationSchema),
+  validateDates(),
   async (req: JWTRequest, res) => {
     const insertedId = await addVacation(req.body);
-
-    const { startDate, endDate } = req.body;
-
-    if (startDate < new Date() || endDate < new Date()) {
-      return res.status(401).send({
-        success: false,
-        msg: "Dates cannot be earlier than the current date.",
-      });
-    }
-
-    if (startDate >= endDate) {
-      return res.status(401).send({
-        success: false,
-        msg: "Starting date must be earlier than end date.",
-      });
-    }
 
     if (!insertedId) {
       return res.status(500).send({ success: false, msg: "Unexpected error" });
@@ -55,7 +41,7 @@ router.post(
 
     const vacation = { ...req.body, id: insertedId };
 
-    io().in("users").emit("add_vacation", vacation);
+    io().in("users").emit("add_vacation", { vacation });
   }
 );
 
@@ -98,6 +84,7 @@ router.put(
   validateAdmin(),
   validateVacationExist(),
   validateSchema(vacationSchema),
+  validateDates(),
   async (req: JWTRequest, res) => {
     const { vacationId } = req.params;
 
@@ -107,11 +94,11 @@ router.put(
       return res.status(500).send({ success: false, msg: "Unexpected error" });
     }
 
-    res.send({ success: true, msg: "Vacation updated.", id: vacationId });
+    res.send({ success: true, msg: "Vacation updated." });
 
     const vacation = { ...req.body, id: vacationId };
 
-    io().in("users").emit("update_vacation", vacation);
+    io().in("users").emit("update_vacation", { vacation });
   }
 );
 
@@ -128,7 +115,7 @@ router.delete(
       return res.status(500).send({ success: false, msg: "Unexpected error" });
     }
 
-    res.send({ success: true, msg: "Vacation deleted.", vacationId });
+    res.send({ success: true, msg: "Vacation deleted." });
 
     io().in("users").emit("delete_vacation", { id: vacationId });
   }

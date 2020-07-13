@@ -1,7 +1,6 @@
 import { JWTRequest } from "../models/jwtRequest";
 import { isVacationExist } from "../queries/vacationQueries";
 import { Response, NextFunction } from "express";
-import { Packet } from "socket.io";
 
 export const validateVacationExist = () => {
   return async (req: JWTRequest, res: Response, next: NextFunction) => {
