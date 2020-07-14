@@ -7,5 +7,6 @@ export const vacationSchema = joi.object({
   startDate: joi.date().required(),
   endDate: joi.date().required(),
   price: joi.number().required(),
+  isFollowing: 0,
   followers: joi.number(),
 });
