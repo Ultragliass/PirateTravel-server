@@ -5,14 +5,33 @@ import { RowDataPacket, ResultSetHeader } from "mysql2";
 export async function getVacations(
   userId: number | string
 ): Promise<RowDataPacket[]> {
-  const [result] = await sql.execute<RowDataPacket[]>(
+  const [favorites] = await sql.execute<RowDataPacket[]>(
     `SELECT vacations.id, description, destination, image, startDate, endDate,
-     price, followers, IF (userId = ?, true, false) AS isFollowing 
-     FROM vacations LEFT JOIN followers ON vacations.id = followers.vacationId`,
+     price, followers, IF (userId > 0, true, false) AS isFollowing 
+     FROM vacations LEFT JOIN followers ON vacations.id = vacationId WHERE userId = ?`,
     [userId]
   );
 
-  return result;
+  if (!favorites.length) {
+    const [result] = await sql.execute<RowDataPacket[]>(
+      `SELECT id, description, destination, image, startDate, endDate,
+      price, followers, IF (1 = 0, true, false) AS isFollowing 
+      FROM vacations`
+    );
+
+    return result
+  }
+
+  const values = favorites.map(() => "?");
+
+  const [vacations] = await sql.execute<RowDataPacket[]>(
+    `SELECT id, description, destination, image, startDate, endDate,
+     price, followers, IF (1 = 0, true, false) AS isFollowing 
+     FROM vacations WHERE id NOT in(${values})`,
+    favorites.map((vacation) => vacation.id)
+  );
+
+  return vacations.concat(favorites);
 }
 
 export async function toggleVacationFollow(

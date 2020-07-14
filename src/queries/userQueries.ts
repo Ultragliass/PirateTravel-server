@@ -51,6 +51,10 @@ export async function authenticateUser(userId: string | number): Promise<any> {
     [userId]
   );
 
+  if (!result) {
+    return false;
+  }
+
   return {
     userType: result.userType,
     userData: {
