@@ -12,8 +12,8 @@ import { validateSchema } from "../middleware/validateSchema";
 import { validateVacationExist } from "../middleware/validateVacationExist";
 import { validateDates } from "../middleware/validateDates";
 import { vacationSchema } from "../schemas/vacation";
-import express from "express";
 import { io } from "../wss/websocketserver";
+import express from "express";
 
 const router = express.Router();
 
@@ -22,7 +22,7 @@ router.get("/", async (req: JWTRequest, res) => {
 
   const vacations = await getVacations(userId);
 
-  res.send(vacations);
+  res.send({success: true, vacations});
 });
 
 router.post(
