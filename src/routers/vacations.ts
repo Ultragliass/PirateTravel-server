@@ -22,7 +22,7 @@ router.get("/", async (req: JWTRequest, res) => {
 
   const vacations = await getVacations(userId);
 
-  res.send({success: true, vacations});
+  res.send({ success: true, vacations });
 });
 
 router.post(
@@ -34,14 +34,14 @@ router.post(
     const insertedId = await addVacation(req.body);
 
     if (!insertedId) {
-      return res.status(500).send({ success: false, msg: "Unexpected error" });
+      return res.status(500).send({ success: false, msg: "Unexpected error." });
     }
 
-    res.send({ success: true, msg: "Vacation added.", id: insertedId });
+    res.send({ success: true, msg: "VACATION ADDED.", id: insertedId });
 
     const vacation = { ...req.body, id: insertedId };
 
-    io().in("users").emit("add_vacation", { vacation });
+    io().in("users").emit("add_vacation", { vacation, msg: "VACATION ADDED." });
   }
 );
 
@@ -55,7 +55,7 @@ router.put(
     if (userType !== "user") {
       return res.status(403).send({
         success: false,
-        msg: "You do not have permission to perform this action",
+        msg: "You do not have permission to perform this action.",
       });
     }
 
@@ -68,14 +68,16 @@ router.put(
     );
 
     if (!affectedRows) {
-      return res.status(500).send({ success: false, msg: "Unexpected error" });
+      return res.status(500).send({ success: false, msg: "Unexpected error." });
     }
 
-    const msg = isFollowing ? "Vacation unfollowed." : "Vacation followed.";
+    const msg = isFollowing ? "VACATION UNFOLLOWED." : "VACATION FOLLOWED.";
 
     res.send({ success: true, msg });
 
-    io().in("admins").emit("toggle_follow", { id: vacationId, isFollowing });
+    io()
+      .in("admins")
+      .emit("toggle_follow", { id: vacationId, isFollowing, msg });
   }
 );
 
@@ -91,14 +93,16 @@ router.put(
     const affectedRows = await updateVacation(req.body, vacationId);
 
     if (!affectedRows) {
-      return res.status(500).send({ success: false, msg: "Unexpected error" });
+      return res.status(500).send({ success: false, msg: "Unexpected error." });
     }
 
-    res.send({ success: true, msg: "Vacation updated." });
+    res.send({ success: true, msg: "VACATION UPDATED." });
 
     const vacation = { ...req.body, id: Number(vacationId) };
 
-    io().in("users").emit("update_vacation", { vacation });
+    io()
+      .in("users")
+      .emit("update_vacation", { vacation, msg: "VACATION UPDATED." });
   }
 );
 
@@ -112,12 +116,14 @@ router.delete(
     const affectedRows = await deleteVacation(vacationId);
 
     if (!affectedRows) {
-      return res.status(500).send({ success: false, msg: "Unexpected error" });
+      return res.status(500).send({ success: false, msg: "Unexpected error." });
     }
 
-    res.send({ success: true, msg: "Vacation deleted." });
+    res.send({ success: true, msg: "VACATION DELETED." });
 
-    io().in("users").emit("delete_vacation", { id: vacationId });
+    io()
+      .in("users")
+      .emit("delete_vacation", { id: vacationId, msg: "VACATION DELETED." });
   }
 );
 
