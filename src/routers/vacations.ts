@@ -41,7 +41,7 @@ router.post(
 
     const vacation = { ...req.body, id: insertedId };
 
-    io().in("users").emit("add_vacation", { vacation, msg: "VACATION ADDED." });
+    io().in("users").emit("add_vacation", { vacation });
   }
 );
 
@@ -75,9 +75,7 @@ router.put(
 
     res.send({ success: true, msg });
 
-    io()
-      .in("admins")
-      .emit("toggle_follow", { id: vacationId, isFollowing, msg });
+    io().in("admins").emit("toggle_follow", { id: vacationId, isFollowing });
   }
 );
 
@@ -100,9 +98,7 @@ router.put(
 
     const vacation = { ...req.body, id: Number(vacationId) };
 
-    io()
-      .in("users")
-      .emit("update_vacation", { vacation, msg: "VACATION UPDATED." });
+    io().in("users").emit("update_vacation", { vacation });
   }
 );
 
@@ -121,9 +117,7 @@ router.delete(
 
     res.send({ success: true, msg: "VACATION DELETED." });
 
-    io()
-      .in("users")
-      .emit("delete_vacation", { id: vacationId, msg: "VACATION DELETED." });
+    io().in("users").emit("delete_vacation", { id: vacationId });
   }
 );
 
