@@ -25,7 +25,7 @@ router.post("/register", validateSchema(registerSchema), async (req, res) => {
 
   const token = jwt.sign({ userId, userType: "user" }, JWT_SECRET);
 
-  res.send({ success: true, token, userData: { username, name, lastname } });
+  res.send({ success: true, token, userData: { username, name, lastname }, userType: "user" });
 });
 
 router.post("/login", validateSchema(loginSchema), async (req, res) => {

@@ -22,12 +22,12 @@ export async function getVacations(
     return result
   }
 
-  const values = favorites.map(() => "?");
+  const ids = favorites.map(() => "?");
 
   const [vacations] = await sql.execute<RowDataPacket[]>(
     `SELECT id, description, destination, image, startDate, endDate,
      price, followers, IF (1 = 0, true, false) AS isFollowing 
-     FROM vacations WHERE id NOT in(${values})`,
+     FROM vacations WHERE id NOT in(${ids})`,
     favorites.map((vacation) => vacation.id)
   );
 
