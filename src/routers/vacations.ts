@@ -162,7 +162,10 @@ router.post(
 
     res.send({ success: true, msg: "COMMENT ADDED." });
 
-    io().emit("add_comment", { id: vacationId, username, comment });
+    io().emit("add_comment", {
+      id: vacationId,
+      comment: { username, comment },
+    });
   }
 );
 
