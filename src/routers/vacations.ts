@@ -145,7 +145,7 @@ router.post(
 
     const { userId, userType } = req.user;
 
-    if (userType === "admin") {
+    if (userType !== "user") {
       return res.status(401).send({
         success: false,
         msg: "You do not have permission to perform this action.",

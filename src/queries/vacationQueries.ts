@@ -7,14 +7,14 @@ export async function getVacations(
 ): Promise<RowDataPacket[]> {
   const [favorites] = await sql.execute<RowDataPacket[]>(
     `SELECT vacations.id, description, destination, image, startDate, endDate,
-     price, followers, IF (userId > 0, true, false) AS isFollowing 
+     price, followers, IF (userId > 0, true, false) AS isFollowing, IF (1 = 0, null, null) AS comments 
      FROM vacations LEFT JOIN followers ON vacations.id = vacationId WHERE userId = ?`,
     [userId]
   );
 
   if (!favorites.length) {
     const [result] = await sql.execute<RowDataPacket[]>(
-      `SELECT *, IF (1 = 0, true, false) AS isFollowing FROM vacations`
+      `SELECT *, IF (1 = 0, true, false) AS isFollowing, IF (1 = 0, null, null) AS comments FROM vacations`
     );
 
     return result;
