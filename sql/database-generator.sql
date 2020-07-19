@@ -1,4 +1,4 @@
-CREATE DATABASE vacation DEFAULT CHARACTER SET utf8mb4;
+CREATE DATABASE vacation DEFAULT CHARSET utf8mb4;
 
 USE vacation;
 
@@ -67,4 +67,18 @@ vacationId int NOT NULL,
 PRIMARY KEY(id),
 FOREIGN KEY (userId) REFERENCES users (id),
 FOREIGN KEY (vacationId) REFERENCES vacations (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+DROP TABLE IF EXISTS comments;
+
+CREATE TABLE comments (
+id int NOT NULL AUTO_INCREMENT,
+userId int NOT NULL,
+vacationId int NOT NULL,
+username varchar(20) NOT NULL,
+comment varchar(100) NOT NULL,
+PRIMARY KEY(id),
+FOREIGN KEY (userId) references users (id),
+FOREIGN KEY (vacationId) references vacations (id),
+FOREIGN KEY (username) references users (username)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
