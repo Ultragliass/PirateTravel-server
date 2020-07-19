@@ -100,10 +100,15 @@ export async function updateVacation(
 }
 
 export async function deleteVacation(
-  vacationId: string | number
+  vacationId: number | string
 ): Promise<number> {
   await sql.execute<ResultSetHeader>(
     "DELETE FROM followers WHERE vacationId = ?",
+    [vacationId]
+  );
+
+  await sql.execute<ResultSetHeader>(
+    "DELETE from comments WHERE vacationId = ?",
     [vacationId]
   );
 
@@ -113,6 +118,35 @@ export async function deleteVacation(
   );
 
   return result.affectedRows;
+}
+
+export async function getComments(
+  vacationId: number | string
+): Promise<RowDataPacket[]> {
+  const [result] = await sql.execute<RowDataPacket[]>(
+    "SELECT username, comment FROM comments where vacationId = ?",
+    [vacationId]
+  );
+
+  return result;
+}
+
+export async function addComment(
+  userId: number | string,
+  vacationId: number | string,
+  comment: string
+): Promise<string> {
+  const [[{ username }]] = await sql.execute<RowDataPacket[]>(
+    "SELECT username FROM users WHERE id = ?",
+    [userId]
+  );
+
+  await sql.execute<ResultSetHeader>(
+    "INSERT INTO comments (userId, vacationId, username, comment) VALUES (?, ?, ?, ?)",
+    [userId, vacationId, username, comment]
+  );
+
+  return username;
 }
 
 export async function isAlreadyFollowing(
