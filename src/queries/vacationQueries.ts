@@ -14,20 +14,16 @@ export async function getVacations(
 
   if (!favorites.length) {
     const [result] = await sql.execute<RowDataPacket[]>(
-      `SELECT id, description, destination, image, startDate, endDate,
-      price, followers, IF (1 = 0, true, false) AS isFollowing 
-      FROM vacations`
+      `SELECT *, IF (1 = 0, true, false) AS isFollowing FROM vacations`
     );
 
-    return result
+    return result;
   }
 
   const ids = favorites.map(() => "?");
 
   const [vacations] = await sql.execute<RowDataPacket[]>(
-    `SELECT id, description, destination, image, startDate, endDate,
-     price, followers, IF (1 = 0, true, false) AS isFollowing 
-     FROM vacations WHERE id NOT in(${ids})`,
+    `SELECT *, IF (1 = 0, true, false) AS isFollowing FROM vacations WHERE id NOT in(${ids})`,
     favorites.map((vacation) => vacation.id)
   );
 
